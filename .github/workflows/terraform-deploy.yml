@@ -14,7 +14,7 @@ on:
 
 env:
   AWS_REGION : "us-west-2"
-  first_week_folder_path: "./1_AWSAccountConfiguration"
+  second_week_folder_path: "./2_BasicInfrastructureConfiguration"
   arnGHAWSRole: "arn:aws:iam::891612562858:role/GithubActionsRole"
   temp_session_name: "samplerolesession"
 
@@ -41,7 +41,7 @@ jobs:
     needs: terraform-check
     defaults:
       run:
-        working-directory: ${{ env.first_week_folder_path }}
+        working-directory: ${{ env.second_week_folder_path }}
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3
@@ -52,7 +52,7 @@ jobs:
           terraform_version: "1.9.6"
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.arnGHAWSRole }} # arn of the role to assume
           role-session-name: ${{ env.temp_session_name }}
@@ -68,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: tfplan
-          path: ${{ env.first_week_folder_path }}
+          path: ${{ env.second_week_folder_path }}
 
   terraform-apply:
     name: Terraform Apply
@@ -76,8 +76,8 @@ jobs:
     needs: terraform-plan
     defaults:
       run:
-        working-directory: ${{ env.first_week_folder_path }}
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'  # Only run on push to main
+        working-directory: ${{ env.second_week_folder_path }}
+#    if: github.event_name == 'push' && github.ref == 'refs/heads/main'  # Only run on push to main
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
