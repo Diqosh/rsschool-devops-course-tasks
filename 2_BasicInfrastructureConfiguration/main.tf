@@ -5,7 +5,7 @@ terraform {
       version = "5.68.0"
     }
   }
-   backend "s3" {
+  backend "s3" {
     bucket         = "remote-backend-rschool-2024q3"
     key            = "terraform.tfstate"
     dynamodb_table = "remote-backend-rschool-2024q3"
@@ -13,29 +13,14 @@ terraform {
   }
 }
 
-
 provider "aws" {
   region = var.aws_region
 }
 
-resource "aws_vpc" "my_vpc" {
-  cidr_block = "10.0.0.0/16"
+module "vpc" {
+  source               = "./modules/vpc"
+  vpc_cidr             = var.vpc_cidr
+  public_subnet_cidrs  = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
+  availability_zones   = var.availability_zones
 }
-
-resource "aws_subnet" "subnets" {
-  count             = length(var.subnet_cidrs)
-  vpc_id            = aws_vpc.my_vpc.id
-  cidr_block        = var.subnet_cidrs[count.index]
-  availability_zone = var.availability_zones[count.index % length(var.availability_zones)]
-
-  tags = {
-    Name = "Subnet-${count.index + 1}"
-    Type = count.index < 2 ? "Public" : "Private"
-  }
-}
-
-# first public subnet, first availability zone
-# second public subnet, second availability zone
-# third private subnet, first availability zone
-# fourth private subnet, second availability zone
-
