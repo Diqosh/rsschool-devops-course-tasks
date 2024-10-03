@@ -22,3 +22,13 @@ variable "availability_zones" {
   description = "Availability Zones to use for the subnets"
   default     = ["us-west-2a", "us-west-2b"]
 }
+
+variable "ami_id" {
+  description = "ID of the AMI to use for the EC2 instances"
+  default     = "ami-08d8ac128e0a1b91c"
+}
+
+variable "key_name" {
+  description = "Name of the key pair to use for the EC2 instances"
+  default     = "macos"
+}

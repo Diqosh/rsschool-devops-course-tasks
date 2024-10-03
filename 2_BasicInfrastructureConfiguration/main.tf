@@ -24,3 +24,12 @@ module "vpc" {
   private_subnet_cidrs = var.private_subnet_cidrs
   availability_zones   = var.availability_zones
 }
+
+module "ec2_instances" {
+  source       = "./modules/ec2_instance"
+  vpc_id       = module.vpc.vpc_id
+  subnet_ids   = concat(module.vpc.public_subnet_ids, module.vpc.private_subnet_ids)
+  subnet_types = concat(["public", "public"], ["private", "private"])
+  ami_id       = var.ami_id
+  key_name     = var.key_name
+}
