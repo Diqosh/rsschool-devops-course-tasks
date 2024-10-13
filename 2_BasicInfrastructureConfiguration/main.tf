@@ -25,6 +25,7 @@ module "vpc" {
   availability_zones   = var.availability_zones
 }
 
+# for testing purposes connection
 module "ec2_instances" {
   source       = "./modules/ec2_instance"
   vpc_id       = module.vpc.vpc_id
